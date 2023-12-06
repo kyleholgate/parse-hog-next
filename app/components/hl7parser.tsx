@@ -21,8 +21,8 @@ const HL7Parser = () => {
         const message = new HL7Message(text);
         setParsedMessage(message);
         console.log(message);
-        setOutputs(message.segments.map((segment, index) => (
-            <Segment key={index} segment={segment} />
+        setOutputs(message.segments.map((segment) => (
+            <Segment key={segment.name} segment={segment} />
         )));
     }
     }, [text]);

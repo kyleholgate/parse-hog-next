@@ -7,7 +7,7 @@ class HL7Message {
     segments: Segment[];
     constructor(message: string) {
         this.value = message;
-        this.segments = message.split(/\r?\n/).map((segmentString: any) => new Segment(segmentString));
+        this.segments = message.split(/\r?\n/).map((segmentString: any, index) => new Segment(segmentString, index + 1));
     }
     getSegment(index: string | number) {
         return this.segments[index] || null; // returns null if segment does not exist
@@ -20,12 +20,16 @@ class HL7Message {
 class Segment {
     value: string;
     fields: Field[];
+    index: number;
+    name: string;
     segmentType: string;
-    constructor(segmentString: string) {
+    constructor(segmentString: string, index: number) {
         this.value = segmentString;
+        this.index = index;
         const fieldStrings = segmentString.split('|');
         this.segmentType = fieldStrings[0]; // Assuming the first field is the segment type
-        this.fields = fieldStrings.map((fieldString, index) => new Field(fieldString, this.segmentType, index + 1));
+        this.name = `${this.segmentType}:${index}`;
+        this.fields = fieldStrings.map((fieldString, index) => new Field(fieldString, this.name, index + 1));
     }
 
     getField(index: string | number) {
@@ -37,13 +41,15 @@ class Segment {
 class Field {
     value: string;
     index: number;
+    segmentType: string;
     name: string;
     components: Component[];
     // store the field as a string, then for each subfield map it to a Subfield object
-    constructor(fieldString: string, segmentType: string, index: number) {
+    constructor(fieldString: string, segmentName: string, index: number) {
         this.value = fieldString;
         this.index = index;
-        this.name = `${segmentType}-${index}`;
+        this.segmentType = segmentName.split(':')[0];
+        this.name = `${segmentName}-${index}`;
 
         if (fieldString.includes('^')) {
             this.components = fieldString.split('^').map((componentString: string, index) => new Component(componentString, this.name, index + 1));
