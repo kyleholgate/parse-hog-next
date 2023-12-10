@@ -5,11 +5,10 @@ import Field from '@/app/components/hl7/Field';
 
 const Segment = ({ segment }) => {
     return (
-        <div className="segment">
-            <span className="segmentType">{segment.segmentType}</span>
+        <div className="segment flex flex-wrap py-1">
             {segment.fields.map((field, index) => (
                 <Fragment key={field.name}>
-                    <Field field={field}/>
+                    <Field field={field} />
                     {index < segment.fields.length - 1 && <span className='field-separator'>|</span>}
                 </Fragment>
             ))}

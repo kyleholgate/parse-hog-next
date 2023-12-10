@@ -3,11 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground: #F1FFFA;
+  --background: #001408;
 }
-
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -15,14 +14,33 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
+*/
 
 body {
   padding: 1rem;
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--foreground);
+  background: var(--background);
 }
+
+
+.segment {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 2px;
+}
+
+.field, .field-separator {
+  white-space: nowrap;
+}
+
+.field:hover {
+  background-color: #CCFCCB;
+  color: #000;
+}
+
+/*
+C33C54 Rose red
+D8315B Cerise
+https://coolors.co/001408-f1fffa-ccfccb-57886c-d8315b
+https://coolors.co/visualizer/001408-f1fffa-ccfccb-57886c-d8315b
+*/

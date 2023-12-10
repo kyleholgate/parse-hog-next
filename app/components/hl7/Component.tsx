@@ -1,10 +1,6 @@
-import { useState, useEffect } from 'react';
-import HL7Message from '@/app/models/HL7Message';
-import Subcomponent from '@/app/components/hl7/Subcomponent';
-
 const Component = ({ component }) => {
     return (
-        <span className="subfield">
+        <span className="component" id={component.name}>
             {component.value}
         </span>
     );
