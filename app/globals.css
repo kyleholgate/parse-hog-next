@@ -38,6 +38,15 @@ body {
   color: #000;
 }
 
+.tippy-box[data-theme~='hog'] {
+  background-color: #CCFCCB;
+  color: black;
+}
+
+.tippy-box[data-theme~='hog'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: #CCFCCB;
+}
+
 /*
 C33C54 Rose red
 D8315B Cerise
