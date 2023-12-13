@@ -179,10 +179,8 @@ const hl7Segments: HL7Segments = {
     'URS': 'Results/Update Selection Criteria',
     'VAR': 'Variance',
     'VND': 'Purchasing Vendor',
-    'ZXX': 'User-defined Segment',
+    'ZXX': 'User-defined Segment'
 };
-
-}
 
 export interface HL7Fields {
     [segment: string]: {
@@ -3165,4 +3163,4 @@ const hl7Fields: HL7Fields = {
     }
 };
 
-export default hl7Fields;
+export { hl7Fields, hl7Segments };

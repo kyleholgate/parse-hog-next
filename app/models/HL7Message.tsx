@@ -1,4 +1,4 @@
-import hl7Fields from '@/app/models/HL7Definitions';
+import { hl7Fields, hl7Segments } from '@/app/models/HL7Definitions';
 
 // HL7 messages are a string, which is made up of segments. Each segment is separated by a line break. Each segment is made up of fields, which are separated by a pipe character (|)
 // Fields can have subfields, which are separated by a caret (^). Subfields can have components, which are separated by an ampersand (&). Components can have subcomponents, which are separated by a tilde (~).
@@ -26,6 +26,7 @@ class Segment {
     index: number;
     name: string;
     segmentType: string;
+    description: string;
     constructor(segmentString: string, index: number) {
         this.raw_value = segmentString;
         this.index = index;
@@ -36,6 +37,7 @@ class Segment {
         // map each field string to a Field object, skip the first field because it is the segment type
         this.fields = fieldStrings.slice(1).map((fieldString: string, index) => new Field(fieldString, this.name, index + 1));
         this.value = this.fields.map((field) => field.value).join('|');
+        this.description = hl7Segments[this.segmentType] ?? "Unknown Segment";
     }
 
     getField(index: string | number) {

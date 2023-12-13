@@ -2,12 +2,14 @@
 
 import { Fragment } from 'react';
 import Field from '@/app/components/hl7/Field';
+import Tooltip from '@/app/components/Tooltip';
 
 const Segment = ({ segment }) => {
     return (
         <div className="segment flex flex-wrap py-1">
-            {/* TODO: wrap Tippy with segment type description */}
-            <span className="segment-type">{segment.segmentType}</span><span className='field-separator'>|</span>
+            <Tooltip content={`${segment.segmentType}: ${segment.description}`}>
+                <div><span className="segment-type field">{segment.segmentType}</span><span className='field-separator'>|</span></div>
+            </Tooltip>
             {segment.fields.map((field, index) => (
                 <Fragment key={field.name}>
                     <Field field={field} />
