@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 // import from src/models/HL7Message.tsx
 import HL7Message from '../models/HL7Message';
 import Segment from './hl7/Segment';
+import { ibmPlexMono } from '@/app/fonts';
 
 const HL7Parser = () => {
 
@@ -34,7 +35,8 @@ const HL7Parser = () => {
       <div className='w-3/4'>
         <h2 className="text-2xl font-bold mb-3">Enter Your HL7</h2>
         <textarea
-          className="w-full h-64 p-4 border rounded text-black font-bold"
+          id='hl7Input'
+          className="w-full h-64 p-4 rounded ibm-plex-mono font-normal bg-background border-2 border-gray-400 text-foreground focus:border-midgreen focus:outline-none"
           placeholder="Paste HL7 message here..."
           value={text}
           onChange={handleTextChange}
@@ -42,7 +44,7 @@ const HL7Parser = () => {
       </div>
       <div className='w-3/4'>
         <h2 className="text-2xl font-bold mb-3">Parsed Message</h2>
-        <div id='parsedOutput' className="w-full overflow-x-auto whitespace-pre-wrap">{outputs}</div>
+        <div id='parsedOutput' className="w-full overflow-x-auto whitespace-pre-wrap ibm-plex-mono">{outputs}</div>
       </div>
     </div>
 

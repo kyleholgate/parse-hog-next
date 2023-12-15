@@ -4,7 +4,8 @@
 
 :root {
   --foreground: #F1FFFA;
-  --background: #001408;
+  --background: #101010;
+  --midgreen: #389f7c;
 }
 /*
 @media (prefers-color-scheme: dark) {
@@ -38,6 +39,14 @@ body {
   color: #000;
 }
 
+.field-separator {
+  color: #389f7c;
+}
+
+.component-separator{
+  color: #979797;
+}
+
 .tippy-box[data-theme~='hog'] {
   background-color: #CCFCCB;
   color: black;
@@ -45,6 +54,10 @@ body {
 
 .tippy-box[data-theme~='hog'][data-placement^='top'] > .tippy-arrow::before {
   border-top-color: #CCFCCB;
+}
+
+.ibm-plex-mono {
+  font-family: var(--font-ibm-plex-mono);
 }
 
 /*
