@@ -6,7 +6,7 @@ import Tooltip from '@/app/components/Tooltip';
 
 const Segment = ({ segment }) => {
     return (
-        <div className="segment flex flex-wrap py-1">
+        <div className="segment flex flex-wrap py-1 font-normal">
             <Tooltip content={`${segment.segmentType}: ${segment.description}`}>
                 <div><span className="segment-type field">{segment.segmentType}</span><span className='field-separator'>|</span></div>
             </Tooltip>
