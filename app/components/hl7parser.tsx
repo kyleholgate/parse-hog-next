@@ -19,7 +19,11 @@ const HL7Parser = () => {
 
   useEffect(() => {
     if (text) {
-      const message = new HL7Message(text);
+      const cleaned_text = text.split('\n')
+        .filter(line => line.trim() !== '')
+        .join('\n');
+
+      const message = new HL7Message(cleaned_text);
       console.log(message);
       setOutputs(message.segments.map((segment) => (
         <SegmentRow key={segment.name} segment={segment} />
