@@ -1,0 +1,17 @@
+import React from 'react';
+import { MdExpandMore } from 'react-icons/md';
+
+const ExpandIcon = ({ isExpanded }) => {
+    return (
+        <div
+            style={{
+                transition: 'transform 0.2s ease-in-out',
+                transform: `rotate(${isExpanded ? '-180deg' : '0deg'})`
+            }}
+        >
+            <MdExpandMore />
+        </div>
+    );
+};
+
+export default ExpandIcon;
