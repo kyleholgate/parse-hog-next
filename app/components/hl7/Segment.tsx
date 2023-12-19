@@ -2,7 +2,7 @@
 
 import { Fragment } from 'react';
 import Field from '@/app/components/hl7/Field';
-import Tooltip from '@/app/components/Tooltip';
+import Tooltip from '@/app/components/ui/Tooltip';
 
 const Segment = ({ segment }) => {
     return (

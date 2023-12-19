@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import Segment from '@/app/components/hl7/Segment';
 import SegmentTable from '@/app/components/hl7/SegmentTable';
-import ExpandIcon from '@/app/components/ExpandIconButton';
+import ExpandIcon from '@/app/components/ui/ExpandIconButton';
 import CopyToClipboard from '@/app/components/CopyToClipboard';
-import CopyIconButton from '@/app/components/CopyIconButton';
+import CopyIconButton from '@/app/components/ui/CopyIconButton';
 
 const SegmentContainer = ({ segment }) => {
     const [isTableVisible, setIsTableVisible] = useState(false);

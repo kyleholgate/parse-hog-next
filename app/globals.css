@@ -35,9 +35,12 @@
 
 
 body {
-  padding: 1rem;
   color: var(--foreground);
   background: var(--background);
+}
+
+p {
+  @apply text-lg text-gray-800 leading-relaxed my-3;
 }
 
 
@@ -74,6 +77,16 @@ body {
 .tippy-box[data-theme~='hog'][data-placement^='top'] > .tippy-arrow::before {
   border-top-color: var(--highlighterGreen);
 }
+
+#hl7Input {
+    transition: height 0.1s ease-in-out;
+    height: 100px; /* default height */
+    resize: none;
+  }
+  
+#hl7Input:focus {
+    height: 500px;
+  }
 
 .ibm-plex-mono {
   font-family: var(--font-ibm-plex-mono);

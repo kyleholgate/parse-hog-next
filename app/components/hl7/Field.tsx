@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react';
-import Tooltip from '@/app/components/Tooltip';
+import Tooltip from '@/app/components/ui/Tooltip';
 import Component from '@/app/components/hl7/Component';
 import CopyToClipboard from '@/app/components/CopyToClipboard';
 
