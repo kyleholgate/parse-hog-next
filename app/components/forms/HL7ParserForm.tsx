@@ -2,8 +2,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { MdInfoOutline } from 'react-icons/md';
-import { BsQuestionCircle } from 'react-icons/bs';
+import { MdInfoOutline, MdExpandMore, MdContentCopy } from 'react-icons/md';
 import HL7Message from '../../models/HL7Message';
 import SegmentContainer from '../hl7/SegmentContainer';
 import Heading from '@/app/components/ui/Heading';
@@ -14,6 +13,11 @@ const HL7Parser = () => {
   // change to signals
   const [text, setText] = useState('');
   const [outputs, setOutputs] = useState([]);
+  const [isTipsVisible, setIsTipsVisible] = useState(false);
+
+  const toggleTips = () => {
+    setIsTipsVisible(!isTipsVisible);
+  };
 
   const handleTextChange = (event) => {
     setText(event.target.value);
@@ -56,7 +60,15 @@ const HL7Parser = () => {
             Parsed Output
           </>
         </Heading>
-        <span className='text-gray-500'>Show tips</span>
+        <button className='px-6 py-2 mb-2 text-gray-500 hover:bg-gray-100 border border-gray-300 rounded text-center' onClick={toggleTips}>Show tips</button>
+        <div className={`flex px-4 rounded transition-all duration-200 ease-in-out ${isTipsVisible ? 'py-2 max-h-screen' : 'py-0 max-h-0 border-none'} overflow-hidden bg-stone-100 border text-foreground`}>
+          <ul className='list-disc ps-4'>
+            <li><strong>Hover</strong> over any field to see its definition</li>
+            <li>Click on any field to <strong>copy it</strong></li>
+            <li>Click on the segment's <strong>expand icon</strong> <MdExpandMore class="inline" /> to see the full definition table</li>
+            <li>Click on the segment's <strong>copy icon</strong> <MdContentCopy class="inline" /> to copy the segment's raw value</li>
+          </ul>
+        </div>
         <div id='parsedOutput' className="w-full overflow-x-auto whitespace-pre-wrap ibm-plex-mono divide-y-2 text-lg">{outputs}</div>
       </div>
     </div >
