@@ -2,9 +2,12 @@
 
 
 import React, { useState, useEffect } from 'react';
+import { MdInfoOutline } from 'react-icons/md';
+import { BsQuestionCircle } from 'react-icons/bs';
 import HL7Message from '../../models/HL7Message';
 import SegmentContainer from '../hl7/SegmentContainer';
 import Heading from '@/app/components/ui/Heading';
+import Tooltip from '@/app/components/ui/Tooltip';
 
 const HL7Parser = () => {
 
@@ -34,8 +37,11 @@ const HL7Parser = () => {
   return (
     <div className="flex flex-col items-center justify-center">
       <div className='w-full'>
-        <Heading level={2} text="Enter Your HL7 Message" />
-        <span className='text-sm text-gray-500'>Your message will automatically be parsed.</span>
+        <Heading level={2}>
+          <>
+            Enter Your HL7 Message <Tooltip content="Your message will automatically be parsed."><span><MdInfoOutline className='inline-block text-2xl text-gray-500' /></span></Tooltip>
+          </>
+        </Heading>
         <textarea
           id='hl7Input'
           className="w-full h-96 p-4 rounded text-lg ibm-plex-mono font-normal bg-background border-2 border-gray-300 text-foreground focus:border-foreground focus:outline-none focus:shadow-[0_0_5px_2px_rgba(0,0,0,0.5)]"
@@ -45,11 +51,15 @@ const HL7Parser = () => {
         />
       </div>
       <div className='w-full'>
-        <Heading level={2} text="Parsed HL7 Output" />
-        <span className='text-sm text-gray-500'>Hover a field to see its' description. Click a field to copy it to your clipboard.</span>
+        <Heading level={2}>
+          <>
+            Parsed Output
+          </>
+        </Heading>
+        <span className='text-gray-500'>Show tips</span>
         <div id='parsedOutput' className="w-full overflow-x-auto whitespace-pre-wrap ibm-plex-mono divide-y-2 text-lg">{outputs}</div>
       </div>
-    </div>
+    </div >
 
   );
 };
