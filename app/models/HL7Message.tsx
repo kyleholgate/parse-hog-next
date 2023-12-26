@@ -6,18 +6,42 @@ import { hl7Fields, hl7Segments } from '@/app/models/HL7Definitions';
 
 class HL7Message {
     value: string;
+    field_separator: string;
+    encoding_characters: string;
     segments: Segment[];
+
     constructor(message: string) {
         this.value = message;
-        this.segments = message.split(/\r?\n/).map((segmentString: any, index) => new Segment(segmentString, index + 1));
-    }
-    getSegment(index: string | number) {
-        return this.segments[index] || null; // returns null if segment does not exist
+        this.segments = message.split(/\r?\n/);
+
+        // Set the default values for field_separator and encoding_characters
+        this.field_separator = '|';
+        this.encoding_characters = '^~\\&';
+
+        // Check if the first segment is MSH. If not, throw an error.
+        if (this.segments.length === 0 || !this.segments[0].raw_value.startsWith('MSH')) {
+            throw new Error("Invalid HL7 message: First segment must be MSH");
+        }
+
+        // Parse the MSH segment to set field_separator and encoding_characters
+        this.parseMSHSegment(this.segments[0].raw_value);
+
+        // Now parse the segments using the correct field_separator and encoding_characters
+        this.segments = this.segments.map((segmentString, index) => new Segment(segmentString, index + 1, this.field_separator, this.encoding_characters));
     }
 
-    // method that renders the HL7 message to the DOM
+    parseMSHSegment(segment: string) {
+        // Extract the field separator, which is the first character after "MSH"
+        this.field_separator = segment[3];
 
-}
+        // Split the MSH segment using the extracted field separator
+        const fields = segment.split(this.field_separator);
+
+        console.log(this.field_separator)
+
+        // Extract encoding characters, which are in the second field of the MSH segment
+        this.encoding_characters = fields.length > 1 ? fields[1] : '^~\\&'; // Default encoding characters if not specified
+    }
 
 class Segment {
     raw_value: string;
@@ -27,10 +51,10 @@ class Segment {
     name: string;
     segmentType: string;
     description: string;
-    constructor(segmentString: string, index: number) {
+    constructor(segmentString: string, index: number, field_separator: string, encoding_characters: string) {
         this.raw_value = segmentString;
         this.index = index;
-        const fieldStrings = segmentString.split('|');
+        const fieldStrings = segmentString.split(field_separator);
         this.segmentType = fieldStrings[0]; // Assuming the first field is the segment type
         this.name = `${this.segmentType}:${index}`;
 
