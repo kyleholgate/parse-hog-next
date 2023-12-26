@@ -22,8 +22,6 @@ const CopyToClipboard = ({ children, textToCopy, notificationText = "Copied to c
             top: rect.top + window.scrollY - 50,
             left: rect.left + window.scrollX
         };
-        console.log(rect);
-        console.log(position);
         setNotificationPosition(position);
         copyTextToClipboard();
     };

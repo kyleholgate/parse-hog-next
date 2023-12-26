@@ -4,6 +4,7 @@ import SegmentTable from '@/app/components/hl7/SegmentTable';
 import ExpandIcon from '@/app/components/ui/ExpandIconButton';
 import CopyToClipboard from '@/app/components/CopyToClipboard';
 import CopyIconButton from '@/app/components/ui/CopyIconButton';
+import Tooltip from '@/app/components/ui/Tooltip';
 
 const SegmentContainer = ({ segment }) => {
     const [isTableVisible, setIsTableVisible] = useState(false);
@@ -20,10 +21,10 @@ const SegmentContainer = ({ segment }) => {
                 </div>
                 <div className='flex justify-end items-center divide-x-2'>
                     <CopyToClipboard textToCopy={segment.raw_value} notificationText='Segment Copied!'>
-                        <CopyIconButton />
+                        <Tooltip content='Copy Segment to Clipboard'><span><CopyIconButton /></span></Tooltip>
                     </CopyToClipboard>
                     <button className='text-3xl px-4' onClick={toggleTable}>
-                        <ExpandIcon isExpanded={isTableVisible} />
+                        <Tooltip content={isTableVisible ? 'Close Segment Table' : 'View Segment Table'}><span><ExpandIcon isExpanded={isTableVisible} /></span></Tooltip>
                     </button>
                 </div>
             </div>
