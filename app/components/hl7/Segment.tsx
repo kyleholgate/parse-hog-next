@@ -8,12 +8,17 @@ const Segment = ({ segment }) => {
     return (
         <div className="segment flex flex-wrap py-1 font-normal">
             <Tooltip content={`${segment.segmentType}: ${segment.description}`}>
-                <div><span className="segment-type field">{segment.segmentType}</span><span className='field-separator'>|</span></div>
+                <div>
+                    <span className="segment-type field">{segment.segmentType}</span>
+                    {/* Render the first field separator only if it's not MSH */}
+                    {segment.segmentType !== 'MSH' && <span className='field-separator'>{segment.field_separator}</span>}
+                </div>
             </Tooltip>
             {segment.fields.map((field, index) => (
                 <Fragment key={field.name}>
                     <Field field={field} />
-                    {index < segment.fields.length - 1 && <span className='field-separator'>|</span>}
+                    {/* Add field separator except for the last field and for MSH-1 */}
+                    {(index < segment.fields.length - 1) && !(segment.segmentType === 'MSH' && index === 0) && <span className='field-separator'>{segment.field_separator}</span>}
                 </Fragment>
             ))}
         </div>

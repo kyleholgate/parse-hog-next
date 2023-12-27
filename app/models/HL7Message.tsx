@@ -12,54 +12,60 @@ class HL7Message {
 
     constructor(message: string) {
         this.value = message;
-        this.segments = message.split(/\r?\n/);
+        const raw_segments = message.split(/\r?\n/);
 
         // Set the default values for field_separator and encoding_characters
         this.field_separator = '|';
         this.encoding_characters = '^~\\&';
 
+        console.log(raw_segments)
+
         // Check if the first segment is MSH. If not, throw an error.
-        if (this.segments.length === 0 || !this.segments[0].raw_value.startsWith('MSH')) {
+        if (raw_segments.length === 0 || !raw_segments[0].startsWith('MSH')) {
             throw new Error("Invalid HL7 message: First segment must be MSH");
         }
 
-        // Parse the MSH segment to set field_separator and encoding_characters
-        this.parseMSHSegment(this.segments[0].raw_value);
-
-        // Now parse the segments using the correct field_separator and encoding_characters
-        this.segments = this.segments.map((segmentString, index) => new Segment(segmentString, index + 1, this.field_separator, this.encoding_characters));
-    }
-
-    parseMSHSegment(segment: string) {
-        // Extract the field separator, which is the first character after "MSH"
-        this.field_separator = segment[3];
-
-        // Split the MSH segment using the extracted field separator
-        const fields = segment.split(this.field_separator);
+        this.field_separator = raw_segments[0][3];
 
         console.log(this.field_separator)
 
-        // Extract encoding characters, which are in the second field of the MSH segment
-        this.encoding_characters = fields.length > 1 ? fields[1] : '^~\\&'; // Default encoding characters if not specified
+        // Now parse the segments using the correct field_separator and encoding_characters
+        this.segments = raw_segments.map((segmentString, index) => new Segment(segmentString, index + 1, this.field_separator));
     }
+}
 
 class Segment {
     raw_value: string;
     value: string;
     fields: Field[];
+    field_separator: string;
     index: number;
     name: string;
     segmentType: string;
     description: string;
-    constructor(segmentString: string, index: number, field_separator: string, encoding_characters: string) {
+    constructor(segmentString: string, index: number, field_separator: string) {
         this.raw_value = segmentString;
         this.index = index;
+        this.field_separator = field_separator;
         const fieldStrings = segmentString.split(field_separator);
         this.segmentType = fieldStrings[0]; // Assuming the first field is the segment type
         this.name = `${this.segmentType}:${index}`;
 
-        // map each field string to a Field object, skip the first field because it is the segment type
-        this.fields = fieldStrings.slice(1).map((fieldString: string, index) => new Field(fieldString, this.name, index + 1));
+        if (this.segmentType === 'MSH') {
+            // For MSH, the first token after 'MSH' is the first field
+            this.fields = [new Field(this.field_separator, this.name, 1, true)];
+            // The second field is the encoding characters, treated as a regular field but with no components
+            this.fields.push(new Field(fieldStrings[1], this.name, 2, true));
+
+            // Process remaining fields normally
+            this.fields.push(...fieldStrings.slice(2).map((fieldString, index) =>
+                new Field(fieldString, this.name, index + 3)));
+        } else {
+            // Process non-MSH segments
+            this.fields = fieldStrings.slice(1).map((fieldString, index) =>
+                new Field(fieldString, this.name, index + 1));
+        }
+
         this.value = this.fields.map((field) => field.value).join('|');
         this.description = hl7Segments[this.segmentType] ?? "Unknown Segment";
     }
@@ -79,15 +85,16 @@ class Field {
     description: string;
     components: Component[];
     // store the field as a string, then for each subfield map it to a Subfield object
-    constructor(fieldString: string, segmentName: string, index: number) {
+    constructor(fieldString: string, segmentName: string, index: number, skipComponents: boolean = false) {
         this.raw_value = fieldString;
         this.index = index;
         this.segmentType = segmentName.split(':')[0];
         this.name = `${segmentName}-${index}`;
         this.description = hl7Fields[this.segmentType]?.[index.toString()] ?? "Unknown Field";
 
-        if (fieldString.includes('^')) {
-            this.components = fieldString.split('^').map((componentString: string, index) => new Component(componentString, this.name, index + 1));
+        if (!skipComponents && fieldString.includes('^')) {
+            this.components = fieldString.split('^').map((componentString, index) =>
+                new Component(componentString, this.name, index + 1));
         } else {
             this.components = [];
         }
