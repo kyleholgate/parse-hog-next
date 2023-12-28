@@ -14,12 +14,14 @@ const HL7Parser = () => {
   const [text, setText] = useState('');
   const [outputs, setOutputs] = useState([]);
   const [isTipsVisible, setIsTipsVisible] = useState(false);
+  const [error, setError] = useState('');
 
   const toggleTips = () => {
     setIsTipsVisible(!isTipsVisible);
   };
 
   const handleTextChange = (event) => {
+    setError('');
     setText(event.target.value);
   };
 
@@ -29,11 +31,16 @@ const HL7Parser = () => {
         .filter(line => line.trim() !== '')
         .join('\n');
 
-      const message = new HL7Message(cleaned_text);
-      console.log(message);
-      setOutputs(message.segments.map((segment) => (
-        <SegmentContainer key={segment.name} segment={segment} />
-      )));
+      try {
+        const message = new HL7Message(cleaned_text);
+        console.log(message);
+        setOutputs(message.segments.map((segment) => (
+          <SegmentContainer key={segment.name} segment={segment} />
+        )));
+      } catch (err) {
+        setError(err.message);
+        setOutputs([]);
+      }
     }
   }, [text]);
 
@@ -46,6 +53,7 @@ const HL7Parser = () => {
             Enter Your HL7 Message <Tooltip content="Your message will automatically be parsed."><span><MdInfoOutline className='inline-block text-2xl text-gray-500' /></span></Tooltip>
           </>
         </Heading>
+        {error && <div className='text-red-500 font-bold text-xl'>{error}</div>}
         <textarea
           id='hl7Input'
           className="w-full h-96 p-4 rounded text-lg ibm-plex-mono font-normal bg-background border-2 border-gray-300 text-foreground focus:border-foreground focus:outline-none focus:shadow-[0_0_5px_2px_rgba(0,0,0,0.5)]"
