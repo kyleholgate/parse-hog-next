@@ -7,6 +7,7 @@ import HL7Message from '../../models/HL7Message';
 import SegmentContainer from '../hl7/SegmentContainer';
 import Heading from '@/app/components/ui/Heading';
 import Tooltip from '@/app/components/ui/Tooltip';
+import { sampleHL7Messages } from '@/app/data/SampleData';
 
 const HL7Parser = () => {
 
@@ -28,6 +29,18 @@ const HL7Parser = () => {
   const handleTextChange = (event) => {
     setError('');
     setText(event.target.value);
+  };
+
+  const setADTMessage = () => {
+    setText(sampleHL7Messages.ADT);
+  };
+
+  const setLabMessage = () => {
+    setText(sampleHL7Messages.LAB);
+  };
+
+  const setPharmacyMessage = () => {
+    setText(sampleHL7Messages.PHARMACY);
   };
 
   useEffect(() => {
@@ -59,13 +72,13 @@ const HL7Parser = () => {
           </>
         </Heading>
         {error && <div className='text-red-500 font-bold text-xl'>{error}</div>}
-        <div className='text-gray-500 pb-1'>or view <a className='underline' onClick={toggleSampleMessages}>sample messages</a></div>
+        <div className='text-gray-500 pb-1'>or view <a className='underline cursor-pointer' onClick={toggleSampleMessages}>sample messages</a></div>
         <div className={`flex px-4 rounded transition-all duration-200 ease-in-out ${isSampleMessagesVisible ? 'py-1 max-h-screen mb-2' : 'py-0 max-h-0 border-none'} overflow-hidden text-foreground`}>
           <div className="container mx-auto px-4 md:px-6 py-2">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2 content-center justify-center">
-              <button className="w-full md:w-1/2 py-2 bg-gray-500 text-white rounded mx-auto">ADT</button>
-              <button className="w-full md:w-1/2 py-2 bg-gray-500 text-white rounded mx-auto">Lab</button>
-              <button className="w-full md:w-1/2 py-2 bg-gray-500 text-white rounded mx-auto">Pharmacy</button>
+              <button className="w-full md:w-1/2 py-2 bg-gray-500 text-white rounded mx-auto" onClick={setADTMessage}>ADT</button>
+              <button className="w-full md:w-1/2 py-2 bg-gray-500 text-white rounded mx-auto" onClick={setLabMessage}>Lab</button>
+              <button className="w-full md:w-1/2 py-2 bg-gray-500 text-white rounded mx-auto" onClick={setPharmacyMessage}>Pharmacy</button>
             </div>
           </div>
         </div>
