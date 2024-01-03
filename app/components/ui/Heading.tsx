@@ -1,7 +1,13 @@
 import React from 'react';
 
+interface HeadingProps {
+    level: 1 | 2 | 3 | 4;
+    children: React.ReactNode;
+    [propName: string]: any; // Additional props
+}
+
 // where children is the text or React element to be displayed
-const Heading = ({ level, children, id }) => {
+const Heading: React.FC<HeadingProps> = ({ level, children, ...rest }) => {
     const baseStyle = "font-extrabold text-black tracking-tight leading-tight my-8";
     let HeadingTag = `h${level}`;
 
@@ -25,7 +31,7 @@ const Heading = ({ level, children, id }) => {
     }
     const attributes = {
         className: `${baseStyle} ${additionalStyle}`,
-        ...(id && { id }) // Add the id attribute if provided
+        ...rest
     };
 
     return React.createElement(HeadingTag, attributes, children);

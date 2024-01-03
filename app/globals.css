@@ -43,7 +43,6 @@ p {
   @apply text-lg text-gray-800 leading-relaxed my-3;
 }
 
-
 .segment {
   display: flex;
   flex-wrap: wrap;

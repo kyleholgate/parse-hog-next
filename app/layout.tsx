@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`flex flex-col justify-between ${inter.variable} ${ibmPlexMono.variable} ${inter.className} min-h-screen`}>
         <Navbar />
-        <div id='pageContent' className='w-3/4 mx-auto mb-auto'>
+        <div id='pageContent' className='w-11/12 lg:w-3/4 mx-auto mb-auto'>
           {children}
         </div>
         <Footer />

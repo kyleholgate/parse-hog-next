@@ -10,7 +10,7 @@ const SegmentDropdown = () => {
         if (selectedSegment) {
             const element = document.getElementById(selectedSegment);
             if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
+                element.scrollIntoView({ behavior: 'smooth' }); // smooth scroll not working
             }
         }
     }, [selectedSegment]);
@@ -20,9 +20,9 @@ const SegmentDropdown = () => {
     };
 
     return (
-        <div className="sticky top-0 left-0 p-4 z-10">
-            <select onChange={handleSelectChange} value={selectedSegment}>
-                <option value="">Select a Segment</option>
+        <div className="sticky text-end top-0 right-0 pt-2 z-50">
+            <select className='p-2 border border-gray-400 rounded' onChange={handleSelectChange} value={selectedSegment}>
+                <option value="">Jump to...</option>
                 {Object.keys(hl7Fields).map(segment => (
                     <option key={segment} value={segment}>{segment}</option>
                 ))}
