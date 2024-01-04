@@ -5,28 +5,33 @@ import React from 'react';
 interface SocialCardProps {
     icon: React.ReactNode;
     headingText: string;
+    href: string;
     buttonText: string;
     descriptionText: string;
 }
 
 // Update the SocialMediaCard component
-const SocialMediaCard: React.FC<SocialCardProps> = ({ icon, headingText, buttonText, descriptionText }) => {
+const SocialMediaCard: React.FC<SocialCardProps> = ({ icon, headingText, href, buttonText, descriptionText }) => {
     return (
-        <div className="max-w-sm bg-white rounded-lg border border-gray-200 shadow-md ">
-            <div className="flex justify-center pt-5">
-                {/* Render the passed React node here */}
-                <span className="text-7xl text-green-600">{icon}</span>
-            </div>
-            <div className="p-5">
-                <h3 className="text-lg text-center font-semibold tracking-tight text-gray-900 ">{headingText}</h3>
-                <p className="font-normal text-xs text-gray-700 ">{descriptionText}</p>
-                <div className="flex justify-center">
-                    <a href="#" className="mt-4 inline-flex items-center py-3 px-6 text-lg font-medium text-center text-white bg-green-600 rounded-lg hover:bg-green-800 focus:ring-4 focus:ring-green-400 ">
-                        {buttonText}
-                    </a>
+        <a href={href} target="_blank" className="max-w-sm w-full h-full">
+            <div className="max-w-sm h-full bg-white rounded-lg border border-gray-200 shadow-md ">
+                <div className="flex justify-center pt-5">
+                    {/* Render the passed React node here */}
+                    <span className="text-7xl text-violet-800">{icon}</span>
+                </div>
+                <div className="p-5">
+                    <h3 className="text-lg text-center font-semibold tracking-tight text-violet-900 hover:underline">{headingText}</h3>
+                    <p className="font-normal text-xs text-center text-gray-700 ">{descriptionText}</p>
+                    <div className="flex justify-center mt-auto">
+                        <a href={href}
+                            target="_blank"
+                            className="mt-4 inline-flex items-center py-3 px-6 text-lg font-medium text-center text-white bg-violet-800 rounded-lg hover:bg-violet-900 focus:ring-4 focus:ring-violet-400 ">
+                            {buttonText}
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        </a>
     );
 };
 
