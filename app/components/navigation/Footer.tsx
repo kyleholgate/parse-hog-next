@@ -22,12 +22,12 @@ export default function Component() {
                         <h2 className="text-xl font-bold mb-2">Policies</h2>
                         <ul className="space-y-2">
                             <li>
-                                <Link className="underline text-sm text-gray-500 hover:text-gray-900" href="#">
+                                <Link className="underline text-sm text-gray-500 hover:text-gray-900" href="/privacy-policy">
                                     Privacy Policy
                                 </Link>
                             </li>
                             <li>
-                                <Link className="underline text-sm text-gray-500 hover:text-gray-900" href="#">
+                                <Link className="underline text-sm text-gray-500 hover:text-gray-900" href="/terms-of-service">
                                     Terms of Service
                                 </Link>
                             </li>
