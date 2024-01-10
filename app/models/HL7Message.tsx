@@ -9,6 +9,7 @@ class HL7Message {
     field_separator: string;
     encoding_characters: string;
     segments: Segment[];
+    validation_errors: string[] = [];
 
     constructor(message: string) {
         this.value = message;
@@ -18,8 +19,6 @@ class HL7Message {
         this.field_separator = '|';
         this.encoding_characters = '^~\\&';
 
-        console.log(raw_segments)
-
         // Check if the first segment is MSH. If not, throw an error.
         if (raw_segments.length === 0 || !raw_segments[0].startsWith('MSH')) {
             throw new Error("Invalid HL7 message: First segment must be MSH");
@@ -27,10 +26,66 @@ class HL7Message {
 
         this.field_separator = raw_segments[0][3];
 
-        console.log(this.field_separator)
-
         // Now parse the segments using the correct field_separator and encoding_characters
         this.segments = raw_segments.map((segmentString, index) => new Segment(segmentString, index + 1, this.field_separator));
+
+        this.validateSegments();
+
+        console.log(this.validation_errors);
+
+    }
+
+    fieldHasValue(segment: Segment, fieldIndex: number) {
+        return segment.getField(fieldIndex) && segment.getField(fieldIndex).value.trim() !== '';
+    }
+
+    validateSegments() {
+        let requiredSegments = {
+            "MSH": false,
+            "PID": false,
+            "PV1": false,
+        };
+
+        this.segments.forEach(segment => {
+            // Check for unknown segment types
+            if (!hl7Segments.hasOwnProperty(segment.segmentType)) {
+                this.validation_errors.push(`Unknown segment type: ${segment.segmentType}`);
+            }
+
+            // Check for MSH segment
+            if (segment.segmentType === 'MSH') {
+                requiredSegments.MSH = true;
+            }
+
+            // Check for PID segment
+            if (segment.segmentType === 'PID') {
+                requiredSegments.PID = true;
+                if (!segment.getField(18) || segment.getField(18).value.trim() === '') {
+                    this.validation_errors.push('PID-18 has no visit/account number.');
+                }
+            }
+
+            // Check for PV1 segment
+            if (segment.segmentType === 'PV1') {
+                requiredSegments.PV1 = true;
+                if (!this.fieldHasValue(segment, 2)) {
+                    this.validation_errors.push('PV1-2 has no patient class.');
+                }
+                if (!this.fieldHasValue(segment, 19)) {
+                    this.validation_errors.push('PV1-19 has no visit/account number.');
+                }
+                if (!this.fieldHasValue(segment, 44)) {
+                    this.validation_errors.push('PV1-44 has no admit date/time.');
+                }
+            }
+        });
+
+        // Check for required segments
+        Object.entries(requiredSegments).forEach(([segmentType, value]) => {
+            if (!value) {
+                this.validation_errors.push(`Missing required segment: ${segmentType}`);
+            }
+        });
     }
 }
 

@@ -17,6 +17,7 @@ const HL7Parser = () => {
   const [isTipsVisible, setIsTipsVisible] = useState(false);
   const [isSampleMessagesVisible, setIsSampleMessagesVisible] = useState(false);
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState('');
 
   const toggleTips = () => {
     setIsTipsVisible(!isTipsVisible);
@@ -55,12 +56,17 @@ const HL7Parser = () => {
         setOutputs(message.segments.map((segment) => (
           <SegmentContainer key={segment.name} segment={segment} />
         )));
+
+        // Update state with validation errors
+        setValidationErrors(message.validation_errors);
       } catch (err) {
         setError(err.message);
         setOutputs([]);
+        setValidationErrors([]); // Clear previous errors if any
       }
     }
   }, [text]);
+
 
 
   return (
@@ -96,7 +102,7 @@ const HL7Parser = () => {
             Parsed Output
           </>
         </Heading>
-        <button className='px-6 py-2 mb-2 text-gray-500 hover:bg-gray-100 border border-gray-300 rounded text-center' onClick={toggleTips}>Show tips</button>
+        <button className='px-6 py-1 mb-2 text-gray-500 hover:bg-gray-100 border border-gray-300 rounded text-center' onClick={toggleTips}>Show tips</button>
         <div className={`flex px-4 rounded transition-all duration-200 ease-in-out ${isTipsVisible ? 'py-2 max-h-screen' : 'py-0 max-h-0 border-none'} overflow-hidden bg-stone-100 border text-foreground`}>
           <ul className='list-disc ps-4'>
             <li><strong>Hover</strong> over any field to see its definition</li>
@@ -105,6 +111,14 @@ const HL7Parser = () => {
             <li>Click on the segment's <strong>copy icon</strong> <MdContentCopy className="inline" /> to copy the segment's raw value</li>
           </ul>
         </div>
+        {validationErrors.length > 0 && (
+          <div id="validationErrors" className="font-bold p-2 bg-pink-200 rounded">
+            <div className="text-xl">Validation Errors:</div>
+            {validationErrors.map((error, index) => (
+              <div key={index} className='py-2 ps-2'>{error}</div>
+            ))}
+          </div>
+        )}
         <div id='parsedOutput' className="w-full overflow-x-auto whitespace-pre-wrap ibm-plex-mono divide-y-2 text-lg">{outputs}</div>
       </div>
     </div >

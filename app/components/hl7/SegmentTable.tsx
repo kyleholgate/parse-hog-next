@@ -17,9 +17,7 @@ const SegmentTable = ({ segment }) => {
                     <tr key={field.name} className='border-b border-slate-100 even:bg-zinc-100'>
                         <td className='w-2/12 px-4 py-2'>{segment.segmentType}-{field.index}</td>
                         <td className='w-4/12 px-4 py-2'>{field.description}</td>
-                        <CopyToClipboard textToCopy={field.value} notificationText='Field Copied!'>
-                            <td className='w-6/12 px-4 py-2'>{field.value}</td>
-                        </CopyToClipboard>
+                        <td className='w-6/12 px-4 py-2'>{field.value}</td>
                     </tr>
                 ))}
             </tbody>
