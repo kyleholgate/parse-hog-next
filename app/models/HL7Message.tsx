@@ -35,12 +35,12 @@ class HL7Message {
 
     }
 
-    fieldHasValue(segment: Segment, fieldIndex: number) {
-        return segment.getField(fieldIndex) && segment.getField(fieldIndex).value.trim() !== '';
-    }
-
     validateSegments() {
-        let requiredSegments = {
+        interface SegmentValidation {
+            [key: string]: boolean;
+        }
+
+        let requiredSegments: SegmentValidation = {
             "MSH": false,
             "PID": false,
             "PV1": false,
@@ -51,33 +51,87 @@ class HL7Message {
             if (!hl7Segments.hasOwnProperty(segment.segmentType)) {
                 this.validation_errors.push(`Unknown segment type: ${segment.segmentType}`);
             }
-
-            // Check for MSH segment
-            if (segment.segmentType === 'MSH') {
-                requiredSegments.MSH = true;
+            else if (requiredSegments.hasOwnProperty(segment.segmentType)) {
+                requiredSegments[segment.segmentType] = true;
             }
 
-            // Check for PID segment
-            if (segment.segmentType === 'PID') {
-                requiredSegments.PID = true;
-                if (!segment.getField(18) || segment.getField(18).value.trim() === '') {
-                    this.validation_errors.push('PID-18 has no visit/account number.');
-                }
-            }
+            // General method to validate a segment
+            const validateSegmentFields = (segmentType: string, segment: Segment) => {
+                // Define dictionaries for validation rules of each segment type
+                const validationRules: { [segmentType: string]: { [fieldNumber: number]: string } } = {
+                    'MSH': {
+                        7: 'MSH-7 has no date/time.',
+                        9: 'MSH-9 has no message type.',
+                    },
+                    'ORC': {
+                        1: 'ORC-1 has no order control.',
+                        2: 'ORC-2 has no placer order number.',
+                        3: 'ORC-3 has no filler order number.',
+                        5: 'ORC-5 has no order status.',
+                        9: 'ORC-9 has no date/time of transaction.',
+                    },
+                    'OBR': {
+                        2: 'OBR-2 has no placer order number.',
+                        3: 'OBR-3 has no filler order number.',
+                        4: 'OBR-4 has no universal service identifier.',
+                        7: 'OBR-7 has no observation date/time.',
+                        16: 'OBR-16 has no ordering provider.',
+                        22: 'OBR-22 has no results status.',
+                    },
+                    'OBX': {
+                        2: 'OBX-2 has no value type.',
+                        3: 'OBX-3 has no observation identifier.',
+                        5: 'OBX-5 has no observation value.',
+                        8: 'OBX-8 has no interpretation code.',
+                        11: 'OBX-11 has no observation result status.',
+                    },
+                    'PV1': {
+                        2: 'PV1-2 has no patient class.',
+                        19: 'PV1-19 has no visit/account number.',
+                        44: 'PV1-44 has no admit date/time.'
+                    },
+                    'PID': {
+                        3: 'PID-3 has no patient ID.',
+                        5: 'PID-5 has no patient name.',
+                        18: 'PID-18 has no visit/account number.'
+                    },
+                    'RXA': {
+                        2: 'RXA-2 has no give sub-ID.',
+                        3: 'RXA-3 has no date/time start of administration.',
+                        5: 'RXA-5 has no administered code.',
+                        6: 'RXA-6 has no administered amount.',
+                        7: 'RXA-7 has no administered units.',
+                        13: 'RXA-13 has no administration method.',
+                        14: 'RXA-14 has no route of administration.',
+                    },
+                    'RXE': {
+                        2: 'RXE-2 has no quantity/timing.',
+                        3: 'RXE-3 has no give code.',
+                        5: 'RXE-5 has no give amount - minimum.',
+                        6: 'RXE-6 has no give amount - maximum.',
+                        7: 'RXE-7 has no give units.',
+                        8: 'RXE-8 has no give dosage form.',
+                        12: 'RXE-12 has no dispense amount.',
+                        13: 'RXE-13 has no dispense units.',
+                    },
+                };
 
-            // Check for PV1 segment
-            if (segment.segmentType === 'PV1') {
-                requiredSegments.PV1 = true;
-                if (!this.fieldHasValue(segment, 2)) {
-                    this.validation_errors.push('PV1-2 has no patient class.');
+                if (validationRules.hasOwnProperty(segmentType)) {
+                    requiredSegments[segmentType] = true;
+                    const rules = validationRules[segmentType];
+
+                    for (const field in rules) {
+                        if (rules.hasOwnProperty(field)) {
+                            const fieldNumber = Number(field);
+                            if (!segment.fieldHasValue(fieldNumber)) {
+                                this.validation_errors.push(rules[fieldNumber]);
+                            }
+                        }
+                    }
                 }
-                if (!this.fieldHasValue(segment, 19)) {
-                    this.validation_errors.push('PV1-19 has no visit/account number.');
-                }
-                if (!this.fieldHasValue(segment, 44)) {
-                    this.validation_errors.push('PV1-44 has no admit date/time.');
-                }
-            }
+            };
+
+            validateSegmentFields(segment.segmentType, segment);
         });
 
         // Check for required segments
@@ -128,6 +182,10 @@ class Segment {
     getField(index: string | number) {
         // account for HL7 using non-zero based indexing
         return this.fields[index - 1] || null; // returns null if field does not exist
+    }
+
+    fieldHasValue(fieldIndex: number) {
+        return this.getField(fieldIndex) && this.getField(fieldIndex).value.trim() !== '';
     }
 }
 
