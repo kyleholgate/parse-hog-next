@@ -14,20 +14,16 @@ export const metadata: Metadata = {
   description: 'Data tools for healthcare professionals, by healthcare professionals. Parse HL7 messages, and more.',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`flex flex-col justify-between ${inter.variable} ${ibmPlexMono.variable} ${inter.className} min-h-screen`}>
+      <body className="flex flex-col justify-between min-h-screen">
         <Navbar />
-        <div id='pageContent' className='w-11/12 lg:w-3/4 2xl:w-1/2 mx-auto mb-auto'>
+        <div id='pageContent' className="w-11/12 lg:w-3/4 2xl:w-1/2 mx-auto mb-auto">
           {children}
         </div>
         <Footer />
       </body>
-    </html>
-  )
+    </html >
+  );
 }
