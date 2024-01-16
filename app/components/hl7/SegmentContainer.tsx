@@ -1,41 +1,33 @@
-import { useState } from 'react';
-import Segment from '@/app/components/hl7/Segment';
-import SegmentTable from '@/app/components/hl7/SegmentTable';
-import ExpandIcon from '@/app/components/ui/ExpandIconButton';
-import CopyToClipboard from '@/app/components/CopyToClipboard';
-import CopyIconButton from '@/app/components/ui/CopyIconButton';
+// NextJS Segment component that renders a single HL7 segment, has children Field components
+
+import { Fragment } from 'react';
+import FieldContainer from '@/app/components/hl7/FieldContainer';
 import Tooltip from '@/app/components/ui/Tooltip';
+import { Field, Segment } from '@/app/models/HL7Message';
 
-const SegmentContainer = ({ segment }) => {
-    const [isTableVisible, setIsTableVisible] = useState(false);
+type SegmentContainerProps = {
+    segment: Segment;
+};
 
-    const toggleTable = () => {
-        setIsTableVisible(!isTableVisible);
-    };
-
+const SegmentContainer = ({ segment }: SegmentContainerProps) => {
     return (
-        <div className="segment-container flex flex-col py-1">
-            <div className="flex flex-row">
-                <div className='flex-grow'>
-                    <Segment segment={segment} />
+        <div className="segment flex flex-wrap py-1 font-normal">
+            <Tooltip content={`${segment.segmentType}: ${segment.description}`}>
+                <div>
+                    <span className="segment-type field">{segment.segmentType}</span>
+                    {/* Render the first field separator only if it's not MSH */}
+                    {segment.segmentType !== 'MSH' && <span className='field-separator'>{segment.field_separator}</span>}
                 </div>
-                <div className='flex justify-end items-center divide-x-2'>
-                    <CopyToClipboard textToCopy={segment.raw_value} notificationText='Segment Copied!'>
-                        <Tooltip content='Copy Segment to Clipboard'><span><CopyIconButton /></span></Tooltip>
-                    </CopyToClipboard>
-                    <button className='text-3xl px-4' onClick={toggleTable}>
-                        <Tooltip content={isTableVisible ? 'Close Segment Table' : 'View Segment Table'}><span><ExpandIcon isExpanded={isTableVisible} /></span></Tooltip>
-                    </button>
-                </div>
-            </div>
-            <div className={`flex transition-all duration-200 ease-in-out ${isTableVisible ? 'max-h-screen' : 'max-h-0'} overflow-hidden`}>
-                <div className='basis-10'></div>
-                <div className='grow'>
-                    <SegmentTable segment={segment} />
-                </div>
-            </div>
+            </Tooltip>
+            {segment.fields.map((field: Field, index) => (
+                <Fragment key={field.name}>
+                    <FieldContainer field={field} />
+                    {/* Add field separator except for the last field and for MSH-1 */}
+                    {(index < segment.fields.length - 1) && !(segment.segmentType === 'MSH' && index === 0) && <span className='field-separator'>{segment.field_separator}</span>}
+                </Fragment>
+            ))}
         </div>
     );
-}
+};
 
 export default SegmentContainer;

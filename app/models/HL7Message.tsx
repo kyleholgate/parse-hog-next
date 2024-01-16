@@ -180,9 +180,13 @@ class Segment {
     }
 
     getField(index: string | number) {
+        // Convert index to a number if it's a string
+        const numericIndex = typeof index === 'string' ? parseInt(index, 10) : index;
+
         // account for HL7 using non-zero based indexing
-        return this.fields[index - 1] || null; // returns null if field does not exist
+        return this.fields[numericIndex - 1] || null; // returns null if field does not exist
     }
+
 
     fieldHasValue(fieldIndex: number) {
         return this.getField(fieldIndex) && this.getField(fieldIndex).value.trim() !== '';
@@ -262,4 +266,4 @@ class Subcomponent {
     }
 }
 
-export default HL7Message;
+export { HL7Message, Segment, Field, Component, Subcomponent };

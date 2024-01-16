@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 
-const CopyToClipboard = ({ children, textToCopy, notificationText = "Copied to clipboard!" }) => {
+interface CopyToClipboardProps {
+    children: React.ReactNode;
+    textToCopy: string;
+    notificationText?: string;
+}
+
+const CopyToClipboard = ({ children, textToCopy, notificationText = "Copied to clipboard!" }: CopyToClipboardProps) => {
     const [showCopyNotification, setShowCopyNotification] = useState(false);
     const [notificationPosition, setNotificationPosition] = useState({ top: 0, left: 0 });
 
@@ -16,7 +22,7 @@ const CopyToClipboard = ({ children, textToCopy, notificationText = "Copied to c
         }
     };
 
-    const handleClick = (e) => {
+    const handleClick = (e: React.MouseEvent<HTMLElement>) => {
         const rect = e.currentTarget.getBoundingClientRect();
         const position = {
             top: rect.top + window.scrollY - 50,

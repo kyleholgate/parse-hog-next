@@ -14,7 +14,11 @@ export const metadata: Metadata = {
   description: 'Data tools for healthcare professionals, by healthcare professionals. Parse HL7 messages, and more.',
 }
 
-export default function RootLayout({ children }) {
+type RootLayoutProps = {
+  children: React.ReactNode;
+};
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body className="flex flex-col justify-between min-h-screen">

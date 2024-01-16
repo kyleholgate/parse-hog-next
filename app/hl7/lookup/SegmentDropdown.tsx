@@ -15,7 +15,7 @@ const SegmentDropdown = () => {
         }
     }, [selectedSegment]);
 
-    const handleSelectChange = (e) => {
+    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedSegment(e.target.value);
     };
 

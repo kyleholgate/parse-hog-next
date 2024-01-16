@@ -1,7 +1,11 @@
 import React from 'react';
 import { MdExpandMore } from 'react-icons/md';
 
-const ExpandIcon = ({ isExpanded }) => {
+type ExpandIconProps = {
+    isExpanded: boolean;
+};
+
+const ExpandIcon = ({ isExpanded }: ExpandIconProps) => {
     return (
         <div
             style={{

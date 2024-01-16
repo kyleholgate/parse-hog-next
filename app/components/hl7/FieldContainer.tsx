@@ -1,9 +1,14 @@
 import { Fragment, useState } from 'react';
 import Tooltip from '@/app/components/ui/Tooltip';
-import Component from '@/app/components/hl7/Component';
+import Component from '@/app/components/hl7/ComponentContainer';
 import CopyToClipboard from '@/app/components/CopyToClipboard';
+import { Field } from '@/app/models/HL7Message';
 
-const Field = ({ field }) => {
+type FieldContainerProps = {
+    field: Field;
+};
+
+const FieldContainer = ({ field }: FieldContainerProps) => {
     return (
         <Fragment>
             <CopyToClipboard textToCopy={field.value} notificationText="Field Copied!">
@@ -26,4 +31,4 @@ const Field = ({ field }) => {
     );
 };
 
-export default Field;
+export default FieldContainer;

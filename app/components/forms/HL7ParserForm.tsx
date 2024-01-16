@@ -3,8 +3,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { MdInfoOutline, MdExpandMore, MdContentCopy } from 'react-icons/md';
-import HL7Message from '../../models/HL7Message';
-import SegmentContainer from '../hl7/SegmentContainer';
+import { HL7Message } from '@/app/models/HL7Message';
+import { SegmentSectionProps } from '@/app/components/hl7/SegmentSection';
+import SegmentSection from '@/app/components/hl7/SegmentSection';
 import Heading from '@/app/components/ui/Heading';
 import Tooltip from '@/app/components/ui/Tooltip';
 import { sampleHL7Messages } from '@/app/data/SampleData';
@@ -13,11 +14,11 @@ const HL7Parser = () => {
 
   // change to signals
   const [text, setText] = useState('');
-  const [outputs, setOutputs] = useState([]);
+  const [outputs, setOutputs] = useState<React.ReactElement<SegmentSectionProps>[]>([]);
   const [isTipsVisible, setIsTipsVisible] = useState(false);
   const [isSampleMessagesVisible, setIsSampleMessagesVisible] = useState(false);
   const [error, setError] = useState('');
-  const [validationErrors, setValidationErrors] = useState('');
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   const toggleTips = () => {
     setIsTipsVisible(!isTipsVisible);
@@ -27,7 +28,7 @@ const HL7Parser = () => {
     setIsSampleMessagesVisible(!isSampleMessagesVisible);
   };
 
-  const handleTextChange = (event) => {
+  const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setError('');
     setText(event.target.value);
   };
@@ -54,12 +55,12 @@ const HL7Parser = () => {
         const message = new HL7Message(cleaned_text);
         console.log(message);
         setOutputs(message.segments.map((segment) => (
-          <SegmentContainer key={segment.name} segment={segment} />
+          <SegmentSection key={segment.name} segment={segment} />
         )));
 
         // Update state with validation errors
         setValidationErrors(message.validation_errors);
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message);
         setOutputs([]);
         setValidationErrors([]); // Clear previous errors if any

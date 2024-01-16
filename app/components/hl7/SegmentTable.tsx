@@ -1,8 +1,12 @@
 // SegmentTable.jsx
 import React from 'react';
-import CopyToClipboard from '@/app/components/CopyToClipboard';
+import { Segment } from '@/app/models/HL7Message';
 
-const SegmentTable = ({ segment }) => {
+type SegmentTableProps = {
+    segment: Segment;
+};
+
+const SegmentTable = ({ segment }: SegmentTableProps) => {
     return (
         <table className='w-full table-auto'>
             <thead>
