@@ -1,8 +1,12 @@
 import React from 'react';
 import Heading from '@/app/components/ui/Heading';
 
+interface TableRow {
+    [key: string]: React.ReactNode; // Adjust the type based on your data
+}
+
 type TableProps = {
-    data: Array<any>;
+    data: TableRow[];
     headers: {
         id: string;
         title: string;
@@ -31,11 +35,15 @@ const Table = ({ data, headers }: TableProps) => {
                 <tbody>
                     {data.map((row, rowIndex) => (
                         <tr key={rowIndex} className="border-b border-slate-100 even:bg-zinc-100">
-                            {Object.entries(row).map(([key, value], index) => (
-                                <td key={index} className={headers.columns.find(col => col.key === key).className}>
-                                    {value}
-                                </td>
-                            ))}
+                            {Object.entries(row).map(([key, value], index) => {
+                                const column = headers.columns.find(col => col.key === key);
+                                const className = column ? column.className : 'default-class';
+                                return (
+                                    <td key={index} className={className}>
+                                        {value}
+                                    </td>
+                                );
+                            })}
                         </tr>
                     ))}
                 </tbody>
