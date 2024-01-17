@@ -222,7 +222,9 @@ class Field {
     }
     // method to get a specific subfield by index
     getComponent(index: string | number) {
-        return this.components[index - 1] || null; // returns null if subfield does not exist
+        const numericIndex = typeof index === 'string' ? parseInt(index, 10) : index;
+
+        return this.components[numericIndex - 1] || null; // returns null if subfield does not exist
     }
 }
 
@@ -249,7 +251,9 @@ class Component {
     }
     // method to get a specific component by index
     getSubcomponent(index: string | number) {
-        return this.subcomponents[index - 1] || null; // returns null if component does not exist
+        const numericIndex = typeof index === 'string' ? parseInt(index, 10) : index;
+
+        return this.subcomponents[numericIndex - 1] || null; // returns null if component does not exist
     }
 }
 
