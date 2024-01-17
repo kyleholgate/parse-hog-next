@@ -3,7 +3,7 @@ import { ADTCodes } from "@/app/models/HL7Definitions";
 
 export const metadata = {
     title: 'ADT Event Codes',
-    description: '',
+    description: 'Lookup HL7 ADT Event Codes.',
 }
 
 export default function Page() {

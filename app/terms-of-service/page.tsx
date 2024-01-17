@@ -2,7 +2,7 @@ import Heading from "@/app/components/ui/Heading";
 
 export const metadata = {
     title: 'Terms of Service',
-    description: '',
+    description: 'Terms of Service for ParseHog.com',
 }
 
 export default function Page() {

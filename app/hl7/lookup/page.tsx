@@ -4,7 +4,7 @@ import SegmentDropdown from "@/app/hl7/lookup/SegmentDropdown";
 
 export const metadata = {
     title: 'HL7 Segment & Field Lookup',
-    description: '',
+    description: 'Lookup HL7 Segment & Field values by segment type and field number.',
 }
 
 export default function Page() {

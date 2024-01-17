@@ -2,7 +2,7 @@ import Heading from "@/app/components/ui/Heading";
 
 export const metadata = {
     title: 'Privacy Policy',
-    description: '',
+    description: 'Privacy Policy for ParseHog.com',
 }
 
 export default function Page() {
