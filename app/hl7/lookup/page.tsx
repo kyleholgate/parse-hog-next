@@ -1,4 +1,5 @@
 import Heading from "@/app/components/ui/Heading";
+import Table from "@/app/components/ui/Table";
 import { hl7Fields } from "@/app/models/HL7Definitions";
 import SegmentDropdown from "@/app/hl7/lookup/SegmentDropdown";
 
@@ -7,33 +8,29 @@ export const metadata = {
     description: 'Lookup HL7 Segment & Field values by segment type and field number.',
 }
 
+const hl7TableData = Object.entries(hl7Fields).flatMap(([segment, fields]) =>
+    Object.entries(fields).map(([field, description]) => ({
+        field: `${segment}-${field}`,
+        description
+    }))
+);
+
+const hl7TableHeaders = {
+    id: 'hl7',
+    title: 'HL7 Fields',
+    columns: [
+        { key: 'field', title: 'Field', className: 'w-3/12 lg:w-2/12 px-6 py-3 text-start' },
+        { key: 'description', title: 'Description', className: 'w-9/12 lg:w-10/12 px-6 py-3 text-start' }
+    ]
+};
+
 export default function Page() {
     return (
         <div className="text-lg">
             <Heading level={1}>HL7 Segment & Field Lookup</Heading>
             <SegmentDropdown />
             <p className="text-xs">Want to search by description? Use Ctrl+F to search with your browser.</p>
-            {Object.entries(hl7Fields).map(([segment, fields]) => (
-                <div key={segment}>
-                    <Heading level={2} id={segment}>{segment}</Heading>
-                    <table className="table-auto w-full text-start">
-                        <thead className="text-zinc-700 uppercase bg-zinc-300 px-6 py-3 border-b-2 border-zinc-50">
-                            <tr>
-                                <th className="w-3/12 lg:w-2/12 px-6 py-3 text-start">Field</th>
-                                <th className="w-9/12 lg:w-10/12 px-6 py-3 text-start">Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {Object.entries(fields).map(([field, description]) => (
-                                <tr key={field} className="border-b border-slate-100 even:bg-zinc-100">
-                                    <td className="w-2/12 px-6 py-3">{segment}-{field}</td>
-                                    <td className="w-10/12 px-6 py-3">{description}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            ))}
+            <Table data={hl7TableData} headers={hl7TableHeaders} />
             <Heading level={2}>Segment Types in HL7</Heading>
             <p>In HL7 messaging, data is organized into segments, each serving a specific purpose in the overall communication structure. A segment is a logical grouping of data fields that convey a particular set of related information. Each segment is identified by a unique segment type code, typically a three-letter abbreviation, which appears at the beginning of the segment line in a message.</p>
 

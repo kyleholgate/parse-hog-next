@@ -1,10 +1,22 @@
 import Heading from "@/app/components/ui/Heading";
+import Table from "@/app/components/ui/Table";
 import { ADTCodes } from "@/app/models/HL7Definitions";
 
 export const metadata = {
     title: 'ADT Event Codes',
     description: 'Lookup HL7 ADT Event Codes.',
 }
+
+const adtTableData = Object.entries(ADTCodes).map(([code, description]) => ({ code, description }));
+
+const adtTableHeaders = {
+    id: 'adt',
+    title: 'ADT Codes',
+    columns: [
+        { key: 'code', title: 'Code', className: 'w-2/12 px-4 py-2 border-b-2 border-gray-200 text-start' },
+        { key: 'description', title: 'Description', className: 'w-10/12 px-4 py-2 border-b-2 border-gray-200 text-start' }
+    ]
+};
 
 export default function Page() {
     return (
@@ -17,22 +29,7 @@ export default function Page() {
                 These ADT event codes are up to date with HL7 2.8.2 standards. The event code should be sent in <strong>MSH-9.2</strong> and <strong>EVN-1</strong> (if EVN segment is sent).
             </p>
             <div>
-                <table className="table-auto w-full">
-                    <thead>
-                        <tr>
-                            <th className="w-2/12 px-4 py-2 border-b-2 border-gray-200 text-start">Code</th>
-                            <th className="w-10/12 px-4 py-2 border-b-2 border-gray-200 text-start">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {Object.entries(ADTCodes).map(([code, description]) => (
-                            <tr key={code} className="border-b border-slate-100 even:bg-zinc-100">
-                                <td className="w-2/12 px-4 py-2">{code}</td>
-                                <td className="w-10/12 px-4 py-2">{description}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <Table data={adtTableData} headers={adtTableHeaders} />
             </div>
             <div>
                 <Heading level={2}>Most Important ADT Event Codes</Heading>
