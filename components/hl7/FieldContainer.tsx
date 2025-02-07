@@ -1,8 +1,8 @@
 import { Fragment, useState } from 'react';
-import Tooltip from '@/app/components/ui/Tooltip';
-import Component from '@/app/components/hl7/ComponentContainer';
-import CopyToClipboard from '@/app/components/CopyToClipboard';
-import { Field } from '@/app/models/HL7Message';
+import Tooltip from '@/components/ui/Tooltip';
+import Component from '@/components/hl7/ComponentContainer';
+import CopyToClipboard from '@/components/CopyToClipboard';
+import { Field } from '@/models/HL7Message';
 
 type FieldContainerProps = {
     field: Field;

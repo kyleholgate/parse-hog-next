@@ -1,5 +1,5 @@
 import React from 'react';
-import { Subcomponent } from '@/app/models/HL7Message';
+import { Subcomponent } from '@/models/HL7Message';
 
 type SubcomponentContainerProps = {
     subcomponent: Subcomponent;

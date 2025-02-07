@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { hl7Fields } from "@/app/models/HL7Definitions";
+import { hl7Fields } from "@/models/HL7Definitions";
 
 const SegmentDropdown = () => {
     const [selectedSegment, setSelectedSegment] = useState('');

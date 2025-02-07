@@ -1,6 +1,6 @@
 // SegmentTable.jsx
 import React from 'react';
-import { Segment } from '@/app/models/HL7Message';
+import { Segment } from '@/models/HL7Message';
 
 type SegmentTableProps = {
     segment: Segment;

@@ -1,5 +1,5 @@
 import React from 'react';
-import Heading from '@/app/components/ui/Heading';
+import Heading from '@/components/ui/Heading';
 
 interface TableRow {
     [key: string]: React.ReactNode; // Adjust the type based on your data

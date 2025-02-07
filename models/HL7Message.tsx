@@ -1,4 +1,4 @@
-import { hl7Fields, hl7Segments } from '@/app/models/HL7Definitions';
+import { hl7Fields, hl7Segments } from '@/models/HL7Definitions';
 
 // HL7 messages are a string, which is made up of segments. Each segment is separated by a line break. Each segment is made up of fields, which are separated by a pipe character (|)
 // Fields can have subfields, which are separated by a caret (^). Subfields can have components, which are separated by an ampersand (&). Components can have subcomponents, which are separated by a tilde (~).

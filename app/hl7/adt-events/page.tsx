@@ -1,6 +1,6 @@
-import Heading from "@/app/components/ui/Heading";
-import Table from "@/app/components/ui/Table";
-import { ADTCodes } from "@/app/models/HL7Definitions";
+import Heading from "@/components/ui/Heading";
+import Table from "@/components/ui/Table";
+import { ADTCodes } from "@/models/HL7Definitions";
 
 export const metadata = {
     title: 'ADT Event Codes',

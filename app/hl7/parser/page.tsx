@@ -1,5 +1,5 @@
-import HL7Parser from "@/app/components/forms/HL7ParserForm";
-import Heading from "@/app/components/ui/Heading";
+import HL7Parser from "@/components/forms/HL7ParserForm";
+import Heading from "@/components/ui/Heading";
 
 export const metadata = {
     title: 'HL7 Parser and Message Viewer',

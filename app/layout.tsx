@@ -3,8 +3,8 @@ import './globals.css'
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import { inter, ibmPlexMono } from '@/app/fonts';
-import Navbar from '@/app/components/navigation/Navbar';
-import Footer from '@/app/components/navigation/Footer';
+import Navbar from '@/components/navigation/Navbar';
+import Footer from '@/components/navigation/Footer';
 
 export const metadata: Metadata = {
   title: {

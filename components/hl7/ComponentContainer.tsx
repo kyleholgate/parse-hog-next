@@ -1,4 +1,4 @@
-import { Component } from '@/app/models/HL7Message';
+import { Component } from '@/models/HL7Message';
 
 type ComponentContainerProps = {
     component: Component;

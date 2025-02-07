@@ -1,4 +1,4 @@
-import Heading from "@/app/components/ui/Heading";
+import Heading from "@/components/ui/Heading";
 
 export const metadata = {
     title: 'Terms of Service',

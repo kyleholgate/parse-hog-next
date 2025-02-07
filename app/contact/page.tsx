@@ -1,5 +1,5 @@
-import Heading from "@/app/components/ui/Heading";
-import ContactGrid from "@/app/components/ui/ContactGrid";
+import Heading from "@/components/ui/Heading";
+import ContactGrid from "@/components/ui/ContactGrid";
 
 
 export const metadata = {

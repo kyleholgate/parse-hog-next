@@ -1,4 +1,4 @@
-import SocialMediaCard from "@/app/components/ui/SocialMediaCard";
+import SocialMediaCard from "@/components/ui/SocialMediaCard";
 import { TbBrandTwitter, TbBrandLinkedin, TbBrandGmail } from "react-icons/tb";
 
 

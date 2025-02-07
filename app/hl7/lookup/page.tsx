@@ -1,6 +1,6 @@
-import Heading from "@/app/components/ui/Heading";
-import Table from "@/app/components/ui/Table";
-import { hl7Fields } from "@/app/models/HL7Definitions";
+import Heading from "@/components/ui/Heading";
+import Table from "@/components/ui/Table";
+import { hl7Fields } from "@/models/HL7Definitions";
 import SegmentDropdown from "@/app/hl7/lookup/SegmentDropdown";
 
 export const metadata = {

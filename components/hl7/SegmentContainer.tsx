@@ -1,9 +1,9 @@
 // NextJS Segment component that renders a single HL7 segment, has children Field components
 
 import { Fragment } from 'react';
-import FieldContainer from '@/app/components/hl7/FieldContainer';
-import Tooltip from '@/app/components/ui/Tooltip';
-import { Field, Segment } from '@/app/models/HL7Message';
+import FieldContainer from '@/components/hl7/FieldContainer';
+import Tooltip from '@/components/ui/Tooltip';
+import { Field, Segment } from '@/models/HL7Message';
 
 type SegmentContainerProps = {
     segment: Segment;

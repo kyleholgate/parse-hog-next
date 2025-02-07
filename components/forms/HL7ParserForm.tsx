@@ -3,12 +3,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { MdInfoOutline, MdExpandMore, MdContentCopy } from 'react-icons/md';
-import { HL7Message } from '@/app/models/HL7Message';
-import { SegmentSectionProps } from '@/app/components/hl7/SegmentSection';
-import SegmentSection from '@/app/components/hl7/SegmentSection';
-import Heading from '@/app/components/ui/Heading';
-import Tooltip from '@/app/components/ui/Tooltip';
-import { sampleHL7Messages } from '@/app/data/SampleData';
+import { HL7Message } from '@/models/HL7Message';
+import { SegmentSectionProps } from '@/components/hl7/SegmentSection';
+import SegmentSection from '@/components/hl7/SegmentSection';
+import Heading from '@/components/ui/Heading';
+import Tooltip from '@/components/ui/Tooltip';
+import { sampleHL7Messages } from '@/data/SampleData';
 
 const HL7Parser = () => {
 
@@ -53,7 +53,6 @@ const HL7Parser = () => {
 
       try {
         const message = new HL7Message(cleaned_text);
-        console.log(message);
         setOutputs(message.segments.map((segment) => (
           <SegmentSection key={segment.name} segment={segment} />
         )));
