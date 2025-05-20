@@ -8,6 +8,10 @@ class HL7Message {
     value: string;
     field_separator: string;
     encoding_characters: string;
+    component_separator: string;
+    repetition_separator: string;
+    escape_character: string;
+    subcomponent_separator: string;
     segments: Segment[];
     validation_errors: string[] = [];
 
@@ -16,18 +20,41 @@ class HL7Message {
         const raw_segments = message.split(/\r?\n/);
 
         // Set the default values for field_separator and encoding_characters
+        // These will be overridden if MSH-1 and MSH-2 are present
         this.field_separator = '|';
-        this.encoding_characters = '^~\\&';
+        this.component_separator = '^';
+        this.repetition_separator = '~';
+        this.escape_character = '\\';
+        this.subcomponent_separator = '&';
+        this.encoding_characters = `${this.component_separator}${this.repetition_separator}${this.escape_character}${this.subcomponent_separator}`;
 
         // Check if the first segment is MSH. If not, throw an error.
         if (raw_segments.length === 0 || !raw_segments[0].startsWith('MSH')) {
             throw new Error("Invalid HL7 message: First segment must be MSH");
         }
 
+        // MSH-1: Field Separator
         this.field_separator = raw_segments[0][3];
 
+        // MSH-2: Encoding Characters
+        const mshFields = raw_segments[0].split(this.field_separator);
+        const msh2 = mshFields[1];
+
+        if (msh2 && msh2.length >= 4) {
+            this.component_separator = msh2[0];
+            this.repetition_separator = msh2[1];
+            this.escape_character = msh2[2];
+            this.subcomponent_separator = msh2[3];
+            // Update encoding_characters string with the actual values from MSH-2
+            this.encoding_characters = msh2.substring(0, 4); 
+        }
+        // If MSH-2 is not present or too short, the defaults set earlier remain in use.
+        // Ensure encoding_characters reflects the separators actually in use.
+        this.encoding_characters = `${this.component_separator}${this.repetition_separator}${this.escape_character}${this.subcomponent_separator}`;
+
+
         // Now parse the segments using the correct field_separator and encoding_characters
-        this.segments = raw_segments.map((segmentString, index) => new Segment(segmentString, index + 1, this.field_separator));
+        this.segments = raw_segments.map((segmentString, index) => new Segment(segmentString, index + 1, this.field_separator, this.component_separator, this.subcomponent_separator));
 
         this.validateSegments();
 
@@ -152,30 +179,36 @@ class Segment {
     name: string;
     segmentType: string;
     description: string;
-    constructor(segmentString: string, index: number, field_separator: string) {
+    component_separator: string; // Added
+    subcomponent_separator: string; // Added
+
+    constructor(segmentString: string, index: number, field_separator: string, component_separator: string, subcomponent_separator: string) { // Modified
         this.raw_value = segmentString;
         this.index = index;
         this.field_separator = field_separator;
+        this.component_separator = component_separator; // Added
+        this.subcomponent_separator = subcomponent_separator; // Added
         const fieldStrings = segmentString.split(field_separator);
         this.segmentType = fieldStrings[0]; // Assuming the first field is the segment type
         this.name = `${this.segmentType}:${index}`;
 
         if (this.segmentType === 'MSH') {
-            // For MSH, the first token after 'MSH' is the first field
-            this.fields = [new Field(this.field_separator, this.name, 1, true)];
-            // The second field is the encoding characters, treated as a regular field but with no components
-            this.fields.push(new Field(fieldStrings[1], this.name, 2, true));
+            // For MSH, the first token after 'MSH' is the first field (which is the field separator itself)
+            // It should not be processed for components/subcomponents.
+            this.fields = [new Field(this.field_separator, this.name, 1, this.component_separator, this.subcomponent_separator, true)];
+            // The second field is the encoding characters, also treated as a regular field but with no components
+            this.fields.push(new Field(fieldStrings[1], this.name, 2, this.component_separator, this.subcomponent_separator, true));
 
-            // Process remaining fields normally
-            this.fields.push(...fieldStrings.slice(2).map((fieldString, index) =>
-                new Field(fieldString, this.name, index + 3)));
+            // Process remaining fields normally, passing the separators
+            this.fields.push(...fieldStrings.slice(2).map((fieldString, idx) =>
+                new Field(fieldString, this.name, idx + 3, this.component_separator, this.subcomponent_separator)));
         } else {
-            // Process non-MSH segments
-            this.fields = fieldStrings.slice(1).map((fieldString, index) =>
-                new Field(fieldString, this.name, index + 1));
+            // Process non-MSH segments, passing the separators
+            this.fields = fieldStrings.slice(1).map((fieldString, idx) =>
+                new Field(fieldString, this.name, idx + 1, this.component_separator, this.subcomponent_separator));
         }
 
-        this.value = this.fields.map((field) => field.value).join('|');
+        this.value = this.fields.map((field) => field.value).join(this.field_separator); // ensure correct separator is used here too
         this.description = hl7Segments[this.segmentType] ?? "Unknown Segment";
     }
 
@@ -201,24 +234,29 @@ class Field {
     name: string;
     description: string;
     components: Component[];
+    component_separator: string; // Added
+    subcomponent_separator: string; // Added
+
     // store the field as a string, then for each subfield map it to a Subfield object
-    constructor(fieldString: string, segmentName: string, index: number, skipComponents: boolean = false) {
+    constructor(fieldString: string, segmentName: string, index: number, component_separator: string, subcomponent_separator: string, skipComponents: boolean = false) { // Modified
         this.raw_value = fieldString;
         this.index = index;
         this.segmentType = segmentName.split(':')[0];
         this.name = `${segmentName}-${index}`;
         this.description = hl7Fields[this.segmentType]?.[index.toString()] ?? "Unknown Field";
+        this.component_separator = component_separator; // Added
+        this.subcomponent_separator = subcomponent_separator; // Added
 
-        if (!skipComponents && fieldString.includes('^')) {
-            this.components = fieldString.split('^').map((componentString, index) =>
-                new Component(componentString, this.name, index + 1));
+        if (!skipComponents && fieldString && fieldString.includes(this.component_separator)) { // check fieldString exists
+            this.components = fieldString.split(this.component_separator).map((componentString, idx) => // use idx to avoid conflict
+                new Component(componentString, this.name, idx + 1, this.subcomponent_separator)); // Pass subcomponent_separator
         } else {
             this.components = [];
         }
 
         // set value of the field to be all the values of the components combined, 
         // or the field string if there are no components
-        this.value = this.components.map((component) => component.value).join('^') || fieldString;
+        this.value = this.components.length > 0 ? this.components.map((component) => component.value).join(this.component_separator) : fieldString; // use this.component_separator
     }
     // method to get a specific subfield by index
     getComponent(index: string | number) {
@@ -234,20 +272,24 @@ class Component {
     index: number;
     name: string;
     subcomponents: Subcomponent[];
+    subcomponent_separator: string; // Added
     // store the subfield as a string, then for each component map it to a Component object
-    constructor(componentString: string, fieldName: string, index: number) {
+    constructor(componentString: string, fieldName: string, index: number, subcomponent_separator: string) { // Modified
         this.raw_value = componentString;
         this.index = index;
         this.name = `${fieldName}.${index}`;
-        if (componentString.includes('&')) {
-            this.subcomponents = componentString.split('&').map((subcomponentString: string, index) => new Subcomponent(subcomponentString, this.name, index + 1));
+        this.subcomponent_separator = subcomponent_separator; // Added
+
+        if (componentString && componentString.includes(this.subcomponent_separator)) { // check componentString exists
+            this.subcomponents = componentString.split(this.subcomponent_separator).map((subcomponentString: string, idx) => // use idx to avoid conflict
+                new Subcomponent(subcomponentString, this.name, idx + 1));
         } else {
             this.subcomponents = [];
         }
 
         // set value of the component to be all the values of the subcomponents combined,
         // or the component string if there are no subcomponents
-        this.value = this.subcomponents.map((subcomponent) => subcomponent.value).join('&') || componentString;
+        this.value = this.subcomponents.length > 0 ? this.subcomponents.map((subcomponent) => subcomponent.value).join(this.subcomponent_separator) : componentString; // use this.subcomponent_separator
     }
     // method to get a specific component by index
     getSubcomponent(index: string | number) {
